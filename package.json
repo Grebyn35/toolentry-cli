@@ -1,5 +1,5 @@
 {
-  "name": "toolflow-cli",
+  "name": "@grebyn/toolflow-cli",
   "type": "module",
   "version": "0.0.0",
   "description": "An open-source CLI for MCP installation",
@@ -13,6 +13,9 @@
   "files": [
     "bin"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rollup -c rollup.config.ts --configPlugin typescript",
     "watch": "rollup -c rollup.config.ts --configPlugin typescript --watch",
