@@ -5,6 +5,7 @@ import { createReadCommand } from './commands/read.js'
 import { createWriteCommand } from './commands/write.js'
 import { createExecCommand } from './commands/exec.js'
 import { createTestCommand } from './commands/test.js'
+import { createAutoinstallCommand } from './commands/autoinstall.js'
 
 const program = new Command()
 
@@ -25,5 +26,6 @@ program.addCommand(createReadCommand())
 program.addCommand(createWriteCommand())
 program.addCommand(createExecCommand())
 program.addCommand(createTestCommand())
+program.addCommand(createAutoinstallCommand())
 
 program.parse()
