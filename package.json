@@ -1,7 +1,7 @@
 {
   "name": "@grebyn/toolflow-cli",
   "type": "module",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "An open-source CLI for MCP installation",
   "author": "Grebyn",
   "license": "MIT",

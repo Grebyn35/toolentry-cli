@@ -69,7 +69,6 @@ export function createAutoinstallCommand(): Command {
     .option('-l, --list-templates', 'List available server templates')
     .option('-p, --path <path>', 'Custom configuration file path')
     .option('-f, --force', 'Create directories if they don\'t exist')
-    .option('-b, --backup', 'Create a backup of existing config before modifying')
     .action(async (client: string | undefined, serversJson: string | undefined, options) => {
       try {
         // Handle --list-templates option
@@ -178,12 +177,10 @@ export function createAutoinstallCommand(): Command {
             existingConfig = content
             logger.verbose('Existing configuration found, will merge')
             
-            // Create backup if requested
-            if (options.backup) {
-              const backupPath = `${configPath}.backup.${Date.now()}`
-              writeJsonFile(backupPath, existingConfig)
-              logger.info(`Backup created: ${backupPath}`)
-            }
+            // Always create backup of existing config
+            const backupPath = `${configPath}.backup.${Date.now()}`
+            writeJsonFile(backupPath, existingConfig)
+            logger.info(`Backup created: ${backupPath}`)
           }
         } else {
           logger.verbose('No existing configuration found, will create new')
