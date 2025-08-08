@@ -1,0 +1,101 @@
+import { SupportedClient } from '../types/index.js'
+
+export interface ServerTemplate {
+  name: string
+  description: string
+  generateConfig: (client: SupportedClient) => Record<string, any>
+}
+
+export const SERVER_TEMPLATES: Record<string, ServerTemplate> = {
+  toolflow: {
+    name: 'ToolFlow MCP Server',
+    description: 'Official ToolFlow MCP server for AI agent tool management',
+    generateConfig: (client: SupportedClient) => ({
+      toolflow: {
+        command: 'npx',
+        args: ['@grebyn/toolflow-mcp-server'],
+        env: {
+          CLIENT: client
+        }
+      }
+    })
+  },
+  filesystem: {
+    name: 'Filesystem MCP Server',
+    description: 'Official MCP filesystem server for file operations',
+    generateConfig: (client: SupportedClient) => ({
+      filesystem: {
+        command: 'npx',
+        args: ['@modelcontextprotocol/server-filesystem', process.cwd()],
+        env: {}
+      }
+    })
+  },
+  git: {
+    name: 'Git MCP Server',
+    description: 'Official MCP git server for repository operations',
+    generateConfig: (client: SupportedClient) => ({
+      git: {
+        command: 'npx',
+        args: ['@modelcontextprotocol/server-git', process.cwd()],
+        env: {}
+      }
+    })
+  },
+  sqlite: {
+    name: 'SQLite MCP Server',
+    description: 'Official MCP SQLite server for database operations',
+    generateConfig: (client: SupportedClient) => ({
+      sqlite: {
+        command: 'npx',
+        args: ['@modelcontextprotocol/server-sqlite'],
+        env: {}
+      }
+    })
+  },
+  brave: {
+    name: 'Brave Search MCP Server',
+    description: 'Official MCP server for Brave Search API',
+    generateConfig: (client: SupportedClient) => ({
+      'brave-search': {
+        command: 'npx',
+        args: ['@modelcontextprotocol/server-brave-search'],
+        env: {
+          BRAVE_API_KEY: 'your-api-key-here'
+        }
+      }
+    })
+  },
+  postgres: {
+    name: 'PostgreSQL MCP Server',
+    description: 'Official MCP server for PostgreSQL database operations',
+    generateConfig: (client: SupportedClient) => ({
+      postgres: {
+        command: 'npx',
+        args: ['@modelcontextprotocol/server-postgres'],
+        env: {
+          POSTGRES_CONNECTION_STRING: 'postgresql://username:password@localhost:5432/database'
+        }
+      }
+    })
+  }
+}
+
+export function getTemplate(templateName: string): ServerTemplate | null {
+  return SERVER_TEMPLATES[templateName] || null
+}
+
+export function listTemplates(): string[] {
+  return Object.keys(SERVER_TEMPLATES)
+}
+
+export function getTemplateHelp(): string {
+  const templates = Object.entries(SERVER_TEMPLATES)
+  const maxNameLength = Math.max(...templates.map(([name]) => name.length))
+  
+  return templates
+    .map(([name, template]) => 
+      `  ${name.padEnd(maxNameLength)} - ${template.description}`
+    )
+    .join('\n')
+}

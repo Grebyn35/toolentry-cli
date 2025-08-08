@@ -4,6 +4,7 @@ import { readJsonFile, writeJsonFile, fileExists, ensureDir } from '../utils/fil
 import { logger } from '../utils/logger.js'
 import { SupportedClient } from '../types/index.js'
 import { SUPPORTED_CLIENTS } from '../constants/index.js'
+import { getTemplate, listTemplates, getTemplateHelp } from '../templates/servers.js'
 
 interface FlexibleMCPConfig {
   mcpServers?: Record<string, any>
@@ -63,12 +64,23 @@ export function createAutoinstallCommand(): Command {
   command
     .description('Auto-install MCP server configurations to client config files')
     .argument('[client]', `Client name (${SUPPORTED_CLIENTS.join(', ')}) - optional if --path is provided`)
-    .argument('<servers>', 'MCP server configuration(s) as JSON')
+    .argument('[servers]', 'MCP server configuration(s) as JSON - optional if --template is provided')
+    .option('-t, --template <name>', 'Use a built-in server template (use --list-templates to see available)')
+    .option('-l, --list-templates', 'List available server templates')
     .option('-p, --path <path>', 'Custom configuration file path')
     .option('-f, --force', 'Create directories if they don\'t exist')
     .option('-b, --backup', 'Create a backup of existing config before modifying')
-    .action(async (client: string | undefined, serversJson: string, options) => {
+    .action(async (client: string | undefined, serversJson: string | undefined, options) => {
       try {
+        // Handle --list-templates option
+        if (options.listTemplates) {
+          console.log('Available server templates:\n')
+          console.log(getTemplateHelp())
+          console.log('\nUsage: toolflow autoinstall <client> --template <name>')
+          console.log('Example: toolflow autoinstall claude-desktop --template toolflow')
+          return
+        }
+
         // Validate that either client or path is provided
         if (!client && !options.path) {
           logger.error('Either <client> or --path must be provided')
@@ -76,29 +88,61 @@ export function createAutoinstallCommand(): Command {
           process.exit(1)
         }
 
-        // Warn if both are provided
+        // Validate that either template or JSON is provided
+        if (!options.template && !serversJson) {
+          logger.error('Either --template <name> or <servers> JSON must be provided')
+          logger.info('Use --list-templates to see available templates')
+          logger.info('Example: toolflow autoinstall claude-desktop --template toolflow')
+          process.exit(1)
+        }
+
+        // Validate that both template and JSON are not provided
+        if (options.template && serversJson) {
+          logger.error('Cannot use both --template and JSON servers argument')
+          logger.info('Use either --template <name> OR provide JSON configuration')
+          process.exit(1)
+        }
+
+        // Warn if both client and path are provided
         if (client && options.path) {
           logger.warn('Both client and --path provided, using custom path')
         }
 
-        // Parse the servers JSON
+        // Generate server configuration
         let newServers: Record<string, any>
-        try {
-          const parsed = JSON.parse(serversJson)
-          
-          // Check if it's a single server config or multiple
-          // If it has 'command' property at root, it's a single server that needs a name
-          if (parsed.command) {
-            logger.error('Single server config must be wrapped with a server name')
-            logger.info('Example: {"my-server": {"command": "npx", "args": [...]}}')
+        
+        if (options.template) {
+          // Use template
+          const template = getTemplate(options.template)
+          if (!template) {
+            logger.error(`Template '${options.template}' not found`)
+            logger.info(`Available templates: ${listTemplates().join(', ')}`)
+            logger.info('Use --list-templates for detailed information')
             process.exit(1)
           }
           
-          newServers = parsed
-        } catch (error) {
-          logger.error('Invalid JSON configuration provided')
-          logger.debug(`JSON parse error: ${(error as Error).message}`)
-          process.exit(1)
+          const targetClient = client as SupportedClient
+          newServers = template.generateConfig(targetClient)
+          logger.verbose(`Using template '${options.template}': ${template.description}`)
+          
+        } else {
+          // Parse JSON
+          try {
+            const parsed = JSON.parse(serversJson!)
+            
+            // Check if it's a single server config or multiple
+            if (parsed.command) {
+              logger.error('Single server config must be wrapped with a server name')
+              logger.info('Example: {"my-server": {"command": "npx", "args": [...]}}')
+              process.exit(1)
+            }
+            
+            newServers = parsed
+          } catch (error) {
+            logger.error('Invalid JSON configuration provided')
+            logger.debug(`JSON parse error: ${(error as Error).message}`)
+            process.exit(1)
+          }
         }
 
         // Validate that we have at least one server to install

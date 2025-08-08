@@ -23,9 +23,9 @@ npx @grebyn/toolflow-cli --version
 
 ## Quick Start
 
-**1. Install a server (recommended):**
+**1. Install ToolFlow server (simple):**
 ```bash
-toolflow autoinstall claude-desktop '{"toolflow": {"command": "npx", "args": ["@grebyn/toolflow-mcp-server"], "env": {"CLIENT": "claude-desktop"}}}'
+npx @grebyn/toolflow-cli autoinstall claude-desktop --template toolflow
 ```
 
 **2. Check what's configured:**
@@ -33,39 +33,51 @@ toolflow autoinstall claude-desktop '{"toolflow": {"command": "npx", "args": ["@
 toolflow read claude-desktop
 ```
 
-**3. Restart your AI client to activate the server!**
+**3. Restart Claude Desktop to activate the server!**
 
 ## Commands
 
 ### Autoinstall (Recommended)
 
-Smart installation that merges new servers into existing configs without overwriting:
+Smart installation that merges new servers into existing configs without overwriting.
 
+**Using Templates (Simple):**
 ```bash
-toolflow autoinstall <client> '<servers-json>'      # Install to known client
+toolflow autoinstall <client> --template <name>     # Use built-in template
+toolflow autoinstall --list-templates               # Show available templates
+```
+
+**Using JSON (Advanced):**
+```bash
+toolflow autoinstall <client> '<servers-json>'      # Install custom config
 toolflow autoinstall --path <file> '<servers-json>' # Install to custom path
 ```
 
-**Features:**
-- Preserves existing servers
-- Handles all config formats (empty, `{}`, `mcpServers`, `servers`)
-- Supports multiple servers in one command
-- Optional backup creation
-
-**Examples:**
+**Template Examples:**
 ```bash
-# Install single server
-toolflow autoinstall claude-desktop '{"toolflow": {"command": "npx", "args": ["@grebyn/toolflow-mcp-server"]}}'
+# Install ToolFlow server (easiest)
+toolflow autoinstall claude-desktop --template toolflow
 
-# Install multiple servers
-toolflow autoinstall cline '{"server1": {"command": "node", "args": ["s1.js"]}, "server2": {"command": "python", "args": ["s2.py"]}}'
+# Install filesystem server
+toolflow autoinstall cline --template filesystem
 
-# Create backup before installing
-toolflow autoinstall windsurf --backup '{"my-server": {"command": "npm", "args": ["start"]}}'
-
-# Use custom path with force directory creation
-toolflow autoinstall --path ~/.config/my-client/config.json --force '{"toolflow": {...}}'
+# List all available templates
+toolflow autoinstall --list-templates
 ```
+
+**JSON Examples:**
+```bash
+# Custom single server
+toolflow autoinstall claude-desktop '{"my-server": {"command": "node", "args": ["server.js"]}}'
+
+# Multiple servers at once
+toolflow autoinstall cline '{"server1": {"command": "node", "args": ["s1.js"]}, "server2": {"command": "python", "args": ["s2.py"]}}'
+```
+
+**Options:**
+- `--backup` - Create backup before modifying
+- `--force` - Create directories if needed
+- `--path` - Use custom config file path
 
 ### Read Configuration
 
@@ -160,11 +172,12 @@ ToolFlow CLI automatically detects config paths for these popular AI clients:
 
 **Install servers (preserves existing config):**
 ```bash
-# Single server
-toolflow autoinstall claude-desktop '{"toolflow": {"command": "npx", "args": ["@grebyn/toolflow-mcp-server"]}}'
+# Using templates (recommended)
+toolflow autoinstall claude-desktop --template toolflow
+toolflow autoinstall cline --template filesystem
 
-# Multiple servers at once
-toolflow autoinstall cline '{"fs": {"command": "npx", "args": ["@modelcontextprotocol/server-filesystem", "/Users/me"]}, "git": {"command": "npx", "args": ["@modelcontextprotocol/server-git", "/Users/me/code"]}}'
+# Using JSON (advanced)
+toolflow autoinstall claude-desktop '{"toolflow": {"command": "npx", "args": ["@grebyn/toolflow-mcp-server"]}}'
 ```
 
 **Check configurations:**
