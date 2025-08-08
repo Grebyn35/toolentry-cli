@@ -13,7 +13,7 @@ export const SERVER_TEMPLATES: Record<string, ServerTemplate> = {
     generateConfig: (client: SupportedClient) => ({
       toolflow: {
         command: 'npx',
-        args: ['@grebyn/toolflow-mcp-server'],
+        args: ['@grebyn/toolflow-mcp-server@latest'],
         env: {
           CLIENT: client
         }

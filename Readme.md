@@ -18,14 +18,14 @@ npm install -g @grebyn/toolflow-cli
 
 Or use with npx (no install needed):
 ```bash
-npx @grebyn/toolflow-cli --version
+npx @grebyn/toolflow-cli@latest --version
 ```
 
 ## Quick Start
 
 **1. Install ToolFlow server (simple):**
 ```bash
-npx @grebyn/toolflow-cli autoinstall claude-desktop --template toolflow
+npx @grebyn/toolflow-cli@latest autoinstall claude-desktop --template toolflow
 ```
 
 **2. Check what's configured:**
@@ -39,18 +39,17 @@ toolflow read claude-desktop
 
 ### Autoinstall (Recommended)
 
-Smart installation that merges new servers into existing configs without overwriting.
+Smart installation that merges new servers into existing configs without overwriting. Automatically creates backups.
 
-**Using Templates (Simple):**
+**Using Templates (For Humans):**
 ```bash
 toolflow autoinstall <client> --template <name>     # Use built-in template
 toolflow autoinstall --list-templates               # Show available templates
 ```
 
-**Using JSON (Advanced):**
+**Using Base64 JSON (For Automation):**
 ```bash
-toolflow autoinstall <client> '<servers-json>'      # Install custom config
-toolflow autoinstall --path <file> '<servers-json>' # Install to custom path
+toolflow autoinstall <client> --json-base64 <encoded>  # Cross-platform safe JSON
 ```
 
 **Template Examples:**
@@ -65,17 +64,17 @@ toolflow autoinstall cline --template filesystem
 toolflow autoinstall --list-templates
 ```
 
-**JSON Examples:**
+**Base64 JSON Examples:**
 ```bash
-# Custom single server
-toolflow autoinstall claude-desktop '{"my-server": {"command": "node", "args": ["server.js"]}}'
+# For computer-generated commands (no escaping issues!)
+toolflow autoinstall claude-desktop --json-base64 eyJ0b29sZmxvdyI6eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyJAZ3JlYnluL3Rvb2xmbG93LW1jcC1zZXJ2ZXJAbGF0ZXN0Il0sImVudiI6eyJDTElFTlQiOiJjbGF1ZGUtZGVza3RvcCJ9fX0=
 
-# Multiple servers at once
-toolflow autoinstall cline '{"server1": {"command": "node", "args": ["s1.js"]}, "server2": {"command": "python", "args": ["s2.py"]}}'
+# How to generate base64 in JavaScript:
+# const config = {"toolflow": {"command": "npx", "args": ["..."]}}
+# const base64 = btoa(JSON.stringify(config))
 ```
 
 **Options:**
-- `--backup` - Create backup before modifying
 - `--force` - Create directories if needed
 - `--path` - Use custom config file path
 
@@ -172,12 +171,12 @@ ToolFlow CLI automatically detects config paths for these popular AI clients:
 
 **Install servers (preserves existing config):**
 ```bash
-# Using templates (recommended)
+# Using templates (recommended for humans)
 toolflow autoinstall claude-desktop --template toolflow
 toolflow autoinstall cline --template filesystem
 
-# Using JSON (advanced)
-toolflow autoinstall claude-desktop '{"toolflow": {"command": "npx", "args": ["@grebyn/toolflow-mcp-server"]}}'
+# Using base64 JSON (recommended for automation)
+toolflow autoinstall claude-desktop --json-base64 eyJ0b29sZmxvdyI6ey...
 ```
 
 **Check configurations:**

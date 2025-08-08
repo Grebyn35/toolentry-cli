@@ -6,6 +6,17 @@ import { SupportedClient } from '../types/index.js'
 import { SUPPORTED_CLIENTS } from '../constants/index.js'
 import { getTemplate, listTemplates, getTemplateHelp } from '../templates/servers.js'
 
+function decodeBase64Json(encoded: string): any {
+  try {
+    const decoded = Buffer.from(encoded, 'base64').toString('utf-8')
+    return JSON.parse(decoded)
+  } catch (error) {
+    logger.error('Invalid base64 encoding or JSON structure')
+    logger.debug(`Error: ${(error as Error).message}`)
+    throw error
+  }
+}
+
 interface FlexibleMCPConfig {
   mcpServers?: Record<string, any>
   servers?: Record<string, any>
@@ -64,12 +75,12 @@ export function createAutoinstallCommand(): Command {
   command
     .description('Auto-install MCP server configurations to client config files')
     .argument('[client]', `Client name (${SUPPORTED_CLIENTS.join(', ')}) - optional if --path is provided`)
-    .argument('[servers]', 'MCP server configuration(s) as JSON - optional if --template is provided')
     .option('-t, --template <name>', 'Use a built-in server template (use --list-templates to see available)')
+    .option('-j, --json-base64 <encoded>', 'Base64-encoded JSON configuration for cross-platform compatibility')
     .option('-l, --list-templates', 'List available server templates')
     .option('-p, --path <path>', 'Custom configuration file path')
     .option('-f, --force', 'Create directories if they don\'t exist')
-    .action(async (client: string | undefined, serversJson: string | undefined, options) => {
+    .action(async (client: string | undefined, options) => {
       try {
         // Handle --list-templates option
         if (options.listTemplates) {
@@ -87,18 +98,18 @@ export function createAutoinstallCommand(): Command {
           process.exit(1)
         }
 
-        // Validate that either template or JSON is provided
-        if (!options.template && !serversJson) {
-          logger.error('Either --template <name> or <servers> JSON must be provided')
+        // Validate that either template or json-base64 is provided
+        if (!options.template && !options.jsonBase64) {
+          logger.error('Either --template <name> or --json-base64 <encoded> must be provided')
           logger.info('Use --list-templates to see available templates')
           logger.info('Example: toolflow autoinstall claude-desktop --template toolflow')
           process.exit(1)
         }
 
-        // Validate that both template and JSON are not provided
-        if (options.template && serversJson) {
-          logger.error('Cannot use both --template and JSON servers argument')
-          logger.info('Use either --template <name> OR provide JSON configuration')
+        // Validate that both template and json-base64 are not provided
+        if (options.template && options.jsonBase64) {
+          logger.error('Cannot use both --template and --json-base64')
+          logger.info('Use either --template <name> OR --json-base64 <encoded>')
           process.exit(1)
         }
 
@@ -124,24 +135,26 @@ export function createAutoinstallCommand(): Command {
           newServers = template.generateConfig(targetClient)
           logger.verbose(`Using template '${options.template}': ${template.description}`)
           
-        } else {
-          // Parse JSON
+        } else if (options.jsonBase64) {
+          // Decode base64 JSON
           try {
-            const parsed = JSON.parse(serversJson!)
+            newServers = decodeBase64Json(options.jsonBase64)
             
             // Check if it's a single server config or multiple
-            if (parsed.command) {
+            if (newServers.command) {
               logger.error('Single server config must be wrapped with a server name')
               logger.info('Example: {"my-server": {"command": "npx", "args": [...]}}')
               process.exit(1)
             }
             
-            newServers = parsed
+            logger.verbose('Using base64-encoded JSON configuration')
           } catch (error) {
-            logger.error('Invalid JSON configuration provided')
-            logger.debug(`JSON parse error: ${(error as Error).message}`)
             process.exit(1)
           }
+        } else {
+          // This should never happen due to validation above
+          logger.error('No configuration source provided')
+          process.exit(1)
         }
 
         // Validate that we have at least one server to install
