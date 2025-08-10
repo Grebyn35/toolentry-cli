@@ -7,13 +7,13 @@ export interface ServerTemplate {
 }
 
 export const SERVER_TEMPLATES: Record<string, ServerTemplate> = {
-  toolflow: {
-    name: 'ToolFlow MCP Server',
-    description: 'Official ToolFlow MCP server for AI agent tool management',
+  toolentry: {
+    name: 'Toolentry MCP Server',
+    description: 'Official Toolentry MCP server for AI agent tool management',
     generateConfig: (client: SupportedClient) => ({
-      toolflow: {
+      toolentry: {
         command: 'npx',
-        args: ['@grebyn/toolflow-mcp-server@latest'],
+        args: ['@grebyn/toolentry-mcp-server@latest'],
         env: {
           CLIENT: client
         }

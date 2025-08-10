@@ -17,12 +17,12 @@ export const SUPPORTED_CLIENTS: SupportedClient[] = [
   'gemini-cli'
 ]
 
-export const TOOLFLOW_MCP_CONFIG = {
+export const TOOLENTRY_MCP_CONFIG = {
   command: 'npx',
-  args: ['@grebyn/toolflow-mcp-server'],
+  args: ['@grebyn/toolentry-mcp-server'],
   env: {
     CLIENT: 'AI-CLIENT'
   }
 }
 
-export const TOOLFLOW_SERVER_NAME = 'toolflow'
+export const TOOLENTRY_SERVER_NAME = 'toolentry'

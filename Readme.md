@@ -1,4 +1,4 @@
-# ToolFlow CLI - MCP Server Configuration Manager
+# Toolentry CLI - MCP Server Configuration Manager
 
 A powerful CLI for installing and managing Model Context Protocol (MCP) server configurations across 14+ AI clients.
 
@@ -13,24 +13,24 @@ A powerful CLI for installing and managing Model Context Protocol (MCP) server c
 ## Installation
 
 ```bash
-npm install -g @grebyn/toolflow-cli
+npm install -g @grebyn/toolentry-cli
 ```
 
 Or use with npx (no install needed):
 ```bash
-npx @grebyn/toolflow-cli@latest --version
+npx @grebyn/toolentry-cli@latest --version
 ```
 
 ## Quick Start
 
-**1. Install ToolFlow server (simple):**
+**1. Install Toolentry server (simple):**
 ```bash
-npx @grebyn/toolflow-cli@latest autoinstall claude-desktop --template toolflow
+npx @grebyn/toolentry-cli@latest autoinstall claude-desktop --template toolentry
 ```
 
 **2. Check what's configured:**
 ```bash
-toolflow read claude-desktop
+toolentry read claude-desktop
 ```
 
 **3. Restart Claude Desktop to activate the server!**
@@ -43,34 +43,34 @@ Smart installation that merges new servers into existing configs without overwri
 
 **Using Templates (For Humans):**
 ```bash
-toolflow autoinstall <client> --template <name>     # Use built-in template
-toolflow autoinstall --list-templates               # Show available templates
+toolentry autoinstall <client> --template <name>     # Use built-in template
+toolentry autoinstall --list-templates               # Show available templates
 ```
 
 **Using Base64 JSON (For Automation):**
 ```bash
-toolflow autoinstall <client> --json-base64 <encoded>  # Cross-platform safe JSON
+toolentry autoinstall <client> --json-base64 <encoded>  # Cross-platform safe JSON
 ```
 
 **Template Examples:**
 ```bash
-# Install ToolFlow server (easiest)
-toolflow autoinstall claude-desktop --template toolflow
+# Install Toolentry server (easiest)
+toolentry autoinstall claude-desktop --template toolentry
 
 # Install filesystem server
-toolflow autoinstall cline --template filesystem
+toolentry autoinstall cline --template filesystem
 
 # List all available templates
-toolflow autoinstall --list-templates
+toolentry autoinstall --list-templates
 ```
 
 **Base64 JSON Examples:**
 ```bash
 # For computer-generated commands (no escaping issues!)
-toolflow autoinstall claude-desktop --json-base64 eyJ0b29sZmxvdyI6eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyJAZ3JlYnluL3Rvb2xmbG93LW1jcC1zZXJ2ZXJAbGF0ZXN0Il0sImVudiI6eyJDTElFTlQiOiJjbGF1ZGUtZGVza3RvcCJ9fX0=
+toolentry autoinstall claude-desktop --json-base64 eyJ0b29sZmxvdyI6eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyJAZ3JlYnluL3Rvb2xmbG93LW1jcC1zZXJ2ZXJAbGF0ZXN0Il0sImVudiI6eyJDTElFTlQiOiJjbGF1ZGUtZGVza3RvcCJ9fX0=
 
 # How to generate base64 in JavaScript:
-# const config = {"toolflow": {"command": "npx", "args": ["..."]}}
+# const config = {"toolentry": {"command": "npx", "args": ["..."]}}
 # const base64 = btoa(JSON.stringify(config))
 ```
 
@@ -83,20 +83,20 @@ toolflow autoinstall claude-desktop --json-base64 eyJ0b29sZmxvdyI6eyJjb21tYW5kIj
 Read the current configuration from an AI client or custom path:
 
 ```bash
-toolflow read <client>          # Use known client (auto-detect path)
-toolflow read --path <file>     # Use custom path
+toolentry read <client>          # Use known client (auto-detect path)
+toolentry read --path <file>     # Use custom path
 ```
 
 **Examples:**
 ```bash
 # Read from known clients (auto-detect config path)
-toolflow read claude-desktop
-toolflow read cline
-toolflow read windsurf
+toolentry read claude-desktop
+toolentry read cline
+toolentry read windsurf
 
 # Read from custom paths
-toolflow read --path /custom/path/config.json
-toolflow read --path ~/.config/my-ai/settings.json
+toolentry read --path /custom/path/config.json
+toolentry read --path ~/.config/my-ai/settings.json
 ```
 
 ### Write Configuration
@@ -104,20 +104,20 @@ toolflow read --path ~/.config/my-ai/settings.json
 **⚠️ Warning:** Overwrites entire config file. Use `autoinstall` instead to preserve existing servers.
 
 ```bash
-toolflow write <client> '<json>'        # Overwrite known client config
-toolflow write '<json>' --path <file>   # Overwrite custom path
+toolentry write <client> '<json>'        # Overwrite known client config
+toolentry write '<json>' --path <file>   # Overwrite custom path
 ```
 
 ### Execute System Commands
 
 ```bash
-toolflow exec <command> [args...]
+toolentry exec <command> [args...]
 ```
 
 **Examples:**
 ```bash
-toolflow exec npm install @grebyn/toolflow-mcp-server
-toolflow exec python -m pip install some-package
+toolentry exec npm install @grebyn/toolentry-mcp-server
+toolentry exec python -m pip install some-package
 ```
 
 ### Test MCP Server Configuration
@@ -125,21 +125,21 @@ toolflow exec python -m pip install some-package
 Test if an MCP server configuration works before installing:
 
 ```bash
-toolflow test '<config-json>' [--type startup|protocol|full] [--timeout ms]
+toolentry test '<config-json>' [--type startup|protocol|full] [--timeout ms]
 ```
 
 **Examples:**
 ```bash
 # Basic test
-toolflow test '{"command": "npx", "args": ["@grebyn/toolflow-mcp-server"]}'
+toolentry test '{"command": "npx", "args": ["@grebyn/toolentry-mcp-server"]}'
 
 # Full protocol test
-toolflow test '{"command": "python", "args": ["server.py"]}' --type protocol
+toolentry test '{"command": "python", "args": ["server.py"]}' --type protocol
 ```
 
 ## Supported AI Clients & Platforms
 
-ToolFlow CLI automatically detects config paths for these popular AI clients:
+Toolentry CLI automatically detects config paths for these popular AI clients:
 
 | Client | Description | Platform Support |
 |--------|-------------|------------------|
@@ -172,25 +172,25 @@ ToolFlow CLI automatically detects config paths for these popular AI clients:
 **Install servers (preserves existing config):**
 ```bash
 # Using templates (recommended for humans)
-toolflow autoinstall claude-desktop --template toolflow
-toolflow autoinstall cline --template filesystem
+toolentry autoinstall claude-desktop --template toolentry
+toolentry autoinstall cline --template filesystem
 
 # Using base64 JSON (recommended for automation)
-toolflow autoinstall claude-desktop --json-base64 eyJ0b29sZmxvdyI6ey...
+toolentry autoinstall claude-desktop --json-base64 eyJ0b29sZmxvdyI6ey...
 ```
 
 **Check configurations:**
 ```bash
-toolflow read claude-desktop
-toolflow read --path ~/.config/my-client/config.json
+toolentry read claude-desktop
+toolentry read --path ~/.config/my-client/config.json
 ```
 
 ## Troubleshooting
 
 **MCP server not appearing?**
-1. Test first: `toolflow test '{"command": "npx", "args": ["your-server"]}'`
+1. Test first: `toolentry test '{"command": "npx", "args": ["your-server"]}'`
 2. Restart your AI client completely
-3. Check config: `toolflow read claude-desktop`
+3. Check config: `toolentry read claude-desktop`
 
 **Common fixes:**
 - Use `--path` for unsupported clients

@@ -86,8 +86,8 @@ export function createAutoinstallCommand(): Command {
         if (options.listTemplates) {
           console.log('Available server templates:\n')
           console.log(getTemplateHelp())
-          console.log('\nUsage: toolflow autoinstall <client> --template <name>')
-          console.log('Example: toolflow autoinstall claude-desktop --template toolflow')
+          console.log('\nUsage: toolentry autoinstall <client> --template <name>')
+          console.log('Example: toolentry autoinstall claude-desktop --template toolentry')
           return
         }
 
@@ -102,7 +102,7 @@ export function createAutoinstallCommand(): Command {
         if (!options.template && !options.jsonBase64) {
           logger.error('Either --template <name> or --json-base64 <encoded> must be provided')
           logger.info('Use --list-templates to see available templates')
-          logger.info('Example: toolflow autoinstall claude-desktop --template toolflow')
+          logger.info('Example: toolentry autoinstall claude-desktop --template toolentry')
           process.exit(1)
         }
 

@@ -12,7 +12,7 @@ const program = new Command()
 program
   .name(name)
   .version(version)
-  .description('ToolFlow CLI - MCP server configuration management')
+  .description('Toolentry CLI - MCP server configuration management')
   .option('-v, --verbose', 'enable verbose logging')
   .option('-d, --debug', 'enable debug logging')
   .hook('preAction', (thisCommand) => {
