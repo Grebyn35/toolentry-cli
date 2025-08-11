@@ -444,7 +444,7 @@ function generateErrorRecommendations(errorMessage: string, config: any): string
     recommendations.push('Verify all dependencies are installed')
   }
   
-  recommendations.push('Use toolflow exec to install missing dependencies')
+  recommendations.push('Use toolentry exec to install missing dependencies')
   
   return recommendations
 }

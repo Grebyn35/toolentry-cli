@@ -69,9 +69,9 @@ function getClientConfigs(): ClientConfig[] {
       name: 'cursor',
       configType: 'json',
       configPath: {
-        win32: join(getBaseConfigDir(), 'Cursor', 'User', 'globalStorage', 'mcp-servers', 'config.json'),
-        darwin: join(getBaseConfigDir(), 'Cursor', 'User', 'globalStorage', 'mcp-servers', 'config.json'),
-        linux: join(getBaseConfigDir(), 'Cursor', 'User', 'globalStorage', 'mcp-servers', 'config.json')
+        win32: join(getHomeDir(), '.cursor', 'mcp.json'),
+        darwin: join(getHomeDir(), '.cursor', 'mcp.json'),
+        linux: join(getHomeDir(), '.cursor', 'mcp.json')
       }
     },
     {

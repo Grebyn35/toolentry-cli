@@ -1,6 +1,6 @@
 import { Command } from 'commander'
 import { getClientConfigPath } from '../config/clients.js'
-import { writeJsonFile, ensureDir } from '../utils/file.js'
+import { writeJsonFile, ensureDir, fileExists, readJsonFile } from '../utils/file.js'
 import { logger } from '../utils/logger.js'
 import { SupportedClient } from '../types/index.js'
 import { SUPPORTED_CLIENTS } from '../constants/index.js'
@@ -59,6 +59,16 @@ export function createWriteCommand(): Command {
         // Ensure directory exists if --force is specified
         if (options.force) {
           ensureDir(configPath)
+        }
+
+        // Create backup if config file already exists
+        if (fileExists(configPath)) {
+          const existingConfig = readJsonFile(configPath)
+          if (existingConfig !== null) {
+            const backupPath = `${configPath}.backup.${Date.now()}`
+            writeJsonFile(backupPath, existingConfig)
+            logger.info(`Backup created: ${backupPath}`)
+          }
         }
 
         // Write the configuration

@@ -5,13 +5,14 @@ import { createReadCommand } from './commands/read.js'
 import { createWriteCommand } from './commands/write.js'
 import { createExecCommand } from './commands/exec.js'
 import { createTestCommand } from './commands/test.js'
+import { createAutoinstallCommand } from './commands/autoinstall.js'
 
 const program = new Command()
 
 program
   .name(name)
   .version(version)
-  .description('ToolFlow CLI - MCP server configuration management')
+  .description('Toolentry CLI - MCP server configuration management')
   .option('-v, --verbose', 'enable verbose logging')
   .option('-d, --debug', 'enable debug logging')
   .hook('preAction', (thisCommand) => {
@@ -25,5 +26,6 @@ program.addCommand(createReadCommand())
 program.addCommand(createWriteCommand())
 program.addCommand(createExecCommand())
 program.addCommand(createTestCommand())
+program.addCommand(createAutoinstallCommand())
 
 program.parse()
