@@ -6,22 +6,22 @@ export function createExecCommand(): Command {
   const command = new Command('exec')
   command
     .description('Execute system commands')
-    .argument('<command>', 'Command to execute')
-    .argument('[args...]', 'Command arguments')
+    .argument('<command>', 'Command to execute (as a single string)')
     .option('-c, --cwd <dir>', 'Working directory')
     .option('-t, --timeout <ms>', 'Timeout in milliseconds', '30000')
-    .action(async (cmd: string, args: string[], options) => {
+    .action(async (cmd: string, options) => {
       try {
         const timeout = parseInt(options.timeout)
         const cwd = options.cwd || process.cwd()
 
-        logger.verbose(`Executing: ${cmd} ${args.join(' ')}`)
+        logger.verbose(`Executing: ${cmd}`)
         logger.verbose(`Working directory: ${cwd}`)
         logger.verbose(`Timeout: ${timeout}ms`)
 
         const startTime = Date.now()
         
-        const child = spawn(cmd, args, {
+        const child = spawn(cmd, {
+          shell: true,
           cwd,
           stdio: ['pipe', 'pipe', 'pipe']
         })
@@ -33,7 +33,11 @@ export function createExecCommand(): Command {
         // Set up timeout
         const timeoutHandle = setTimeout(() => {
           timedOut = true
-          child.kill('SIGTERM')
+          if (process.platform === 'win32') {
+            spawn('taskkill', ['/pid', child.pid!.toString(), '/f', '/t'])
+          } else {
+            child.kill('SIGTERM')
+          }
         }, timeout)
 
         // Collect output
@@ -61,7 +65,7 @@ export function createExecCommand(): Command {
           exit_code: timedOut ? -1 : exitCode,
           stdout: stdout.trim(),
           stderr: stderr.trim(),
-          command_line: `${cmd} ${args.join(' ')}`,
+          command_line: cmd,
           execution_time: executionTime,
           timed_out: timedOut
         }
@@ -77,7 +81,7 @@ export function createExecCommand(): Command {
           exit_code: 1,
           stdout: '',
           stderr: (error as Error).message,
-          command_line: `${cmd} ${args.join(' ')}`,
+          command_line: cmd,
           execution_time: 0,
           timed_out: false
         }
