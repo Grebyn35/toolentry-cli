@@ -9,22 +9,43 @@ export function createWriteCommand(): Command {
   const command = new Command('write')
   command
     .description('Write configuration file for specified client or custom path')
-    .argument('[client]', `Client name (${SUPPORTED_CLIENTS.join(', ')}) - optional if --path is provided`)
-    .argument('<config>', 'Configuration JSON content')
+    .argument('<args...>', 'Arguments: either "<client> <config>" or "<config>" when using --path')
     .option('-p, --path <path>', 'Custom configuration file path')
     .option('-f, --force', 'Create directories if they don\'t exist')
-    .action(async (client: string | undefined, configContent: string, options) => {
+    .action(async (args: string[], options) => {
       try {
-        // Validate that either client or path is provided
-        if (!client && !options.path) {
-          logger.error('Either <client> or --path must be provided')
-          logger.info(`Supported clients: ${SUPPORTED_CLIENTS.join(', ')}`)
-          process.exit(1)
-        }
+        let client: string | undefined
+        let configContent: string
 
-        // Warn if both are provided
-        if (client && options.path) {
-          logger.warn('Both client and --path provided, using custom path')
+        // Parse arguments based on whether --path is provided
+        if (options.path) {
+          // With --path: only config needed
+          if (args.length !== 1) {
+            logger.error('When using --path, provide only the config JSON')
+            logger.info('Usage: write <config> --path <file>')
+            logger.info('Example: write \'{"servers": {}}\' --path ~/.config/claude/config.json')
+            process.exit(1)
+          }
+          configContent = args[0]
+          client = undefined
+        } else {
+          // Without --path: client + config needed
+          if (args.length !== 2) {
+            logger.error('Without --path, provide both client name and config JSON')
+            logger.info('Usage: write <client> <config>')
+            logger.info(`Supported clients: ${SUPPORTED_CLIENTS.join(', ')}`)
+            logger.info('Example: write claude-desktop \'{"servers": {}}\'')
+            process.exit(1)
+          }
+          client = args[0]
+          configContent = args[1]
+          
+          // Validate client
+          if (!SUPPORTED_CLIENTS.includes(client as SupportedClient)) {
+            logger.error(`Unsupported client: ${client}`)
+            logger.info(`Supported clients: ${SUPPORTED_CLIENTS.join(', ')}`)
+            process.exit(1)
+          }
         }
 
         // Parse JSON config
@@ -41,17 +62,9 @@ export function createWriteCommand(): Command {
         let configPath: string
         if (options.path) {
           configPath = options.path
-        } else if (client) {
-          // Validate client only if we're using it
-          if (!SUPPORTED_CLIENTS.includes(client as SupportedClient)) {
-            logger.error(`Unsupported client: ${client}`)
-            logger.info(`Supported clients: ${SUPPORTED_CLIENTS.join(', ')}`)
-            process.exit(1)
-          }
-          configPath = getClientConfigPath(client as SupportedClient)
         } else {
-          // This should never happen due to validation above, but TypeScript needs it
-          process.exit(1)
+          // Client is guaranteed to be valid at this point
+          configPath = getClientConfigPath(client as SupportedClient)
         }
         
         logger.verbose(`Writing config to: ${configPath}`)

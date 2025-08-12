@@ -1,18 +1,22 @@
 import { Command } from 'commander'
-import { spawn } from 'child_process'
+import { exec } from 'child_process'
 import { logger } from '../utils/logger.js'
 
 export function createExecCommand(): Command {
   const command = new Command('exec')
   command
     .description('Execute system commands')
-    .argument('<command>', 'Command to execute (as a single string)')
+    .argument('<command...>', 'Command and arguments to execute')
     .option('-c, --cwd <dir>', 'Working directory')
     .option('-t, --timeout <ms>', 'Timeout in milliseconds', '30000')
-    .action(async (cmd: string, options) => {
+    .allowUnknownOption(true) // Allow options like --version to pass through to executed commands
+    .action(async (cmdArgs: string[], options) => {
       try {
         const timeout = parseInt(options.timeout)
         const cwd = options.cwd || process.cwd()
+        
+        // Simple: just join the arguments to create the shell command
+        const cmd = cmdArgs.join(' ')
 
         logger.verbose(`Executing: ${cmd}`)
         logger.verbose(`Working directory: ${cwd}`)
@@ -20,62 +24,34 @@ export function createExecCommand(): Command {
 
         const startTime = Date.now()
         
-        const child = spawn(cmd, {
-          shell: true,
+        // Use Node.js exec - much simpler and cross-platform
+        exec(cmd, {
           cwd,
-          stdio: ['pipe', 'pipe', 'pipe']
-        })
-
-        let stdout = ''
-        let stderr = ''
-        let timedOut = false
-
-        // Set up timeout
-        const timeoutHandle = setTimeout(() => {
-          timedOut = true
-          if (process.platform === 'win32') {
-            spawn('taskkill', ['/pid', child.pid!.toString(), '/f', '/t'])
-          } else {
-            child.kill('SIGTERM')
+          timeout,
+          maxBuffer: 1024 * 1024, // 1MB buffer
+          killSignal: 'SIGTERM'
+        }, (error, stdout, stderr) => {
+          const executionTime = Date.now() - startTime
+          const timedOut = error?.signal === 'SIGTERM' && error?.code === null
+          
+          const result = {
+            success: !error,
+            exit_code: error?.code || 0,
+            stdout: stdout.trim(),
+            stderr: stderr.trim(),
+            command_line: cmd,
+            execution_time: executionTime,
+            timed_out: timedOut
           }
-        }, timeout)
 
-        // Collect output
-        child.stdout?.on('data', (data) => {
-          stdout += data.toString()
+          console.log(JSON.stringify(result, null, 2))
+
+          // Exit with same code as child process
+          process.exit(error?.code || 0)
         })
-
-        child.stderr?.on('data', (data) => {
-          stderr += data.toString()
-        })
-
-        // Wait for process to complete
-        const exitCode = await new Promise<number>((resolve) => {
-          child.on('close', (code) => {
-            clearTimeout(timeoutHandle)
-            resolve(code || 0)
-          })
-        })
-
-        const executionTime = Date.now() - startTime
-
-        // Output results
-        const result = {
-          success: !timedOut && exitCode === 0,
-          exit_code: timedOut ? -1 : exitCode,
-          stdout: stdout.trim(),
-          stderr: stderr.trim(),
-          command_line: cmd,
-          execution_time: executionTime,
-          timed_out: timedOut
-        }
-
-        console.log(JSON.stringify(result, null, 2))
-
-        // Exit with same code as child process
-        process.exit(timedOut ? 1 : exitCode)
         
       } catch (error) {
+        const cmd = cmdArgs.join(' ')
         const result = {
           success: false,
           exit_code: 1,
