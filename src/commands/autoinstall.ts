@@ -131,7 +131,7 @@ export function createAutoinstallCommand(): Command {
             process.exit(1)
           }
           
-          const targetClient = client as SupportedClient
+          const targetClient = client as SupportedClient | undefined
           newServers = template.generateConfig(targetClient)
           logger.verbose(`Using template '${options.template}': ${template.description}`)
           

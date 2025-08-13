@@ -9,6 +9,7 @@ A powerful CLI for installing and managing Model Context Protocol (MCP) server c
 - ✏️ **Write** - Manual configuration management
 - ⚡ **Execute** - Run system commands for dependencies
 - 🧪 **Test** - Validate server configs before installing
+- 🎯 **Flexible** - Works with 17+ predefined clients OR custom config paths
 
 ## Installation
 
@@ -44,12 +45,14 @@ Smart installation that merges new servers into existing configs without overwri
 **Using Templates (For Humans):**
 ```bash
 toolentry autoinstall <client> --template <name>     # Use built-in template
+toolentry autoinstall --template <name> --path <file> # Use template with custom path
 toolentry autoinstall --list-templates               # Show available templates
 ```
 
 **Using Base64 JSON (For Automation):**
 ```bash
-toolentry autoinstall <client> --json-base64 <encoded>  # Cross-platform safe JSON
+toolentry autoinstall <client> --json-base64 <encoded>         # Use with known client
+toolentry autoinstall --json-base64 <encoded> --path <file>    # Use with custom path
 ```
 
 **Template Examples:**
@@ -60,6 +63,9 @@ toolentry autoinstall claude-desktop --template toolentry
 # Install filesystem server
 toolentry autoinstall cline --template filesystem
 
+# Install to custom path (no client needed)
+toolentry autoinstall --template toolentry --path ~/.config/my-client/config.json
+
 # List all available templates
 toolentry autoinstall --list-templates
 ```
@@ -69,6 +75,9 @@ toolentry autoinstall --list-templates
 # For computer-generated commands (no escaping issues!)
 toolentry autoinstall claude-desktop --json-base64 eyJ0b29sZmxvdyI6eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyJAZ3JlYnluL3Rvb2xmbG93LW1jcC1zZXJ2ZXJAbGF0ZXN0Il0sImVudiI6eyJDTElFTlQiOiJjbGF1ZGUtZGVza3RvcCJ9fX0=
 
+# Install to custom path with base64 JSON
+toolentry autoinstall --json-base64 eyJ0b29sZW50cnkiOnsiY29tbWFuZCI6Im5weCIsImFyZ3MiOlsiQGdyZWJ5bi90b29sZW50cnktbWNwLXNlcnZlciJdfX0= --path ./config.json
+
 # How to generate base64 in JavaScript:
 # const config = {"toolentry": {"command": "npx", "args": ["..."]}}
 # const base64 = btoa(JSON.stringify(config))
@@ -76,7 +85,7 @@ toolentry autoinstall claude-desktop --json-base64 eyJ0b29sZmxvdyI6eyJjb21tYW5kI
 
 **Options:**
 - `--force` - Create directories if needed
-- `--path` - Use custom config file path
+- `--path` - Use custom config file path (makes client optional)
 
 ### Read Configuration
 
@@ -160,6 +169,14 @@ Toolentry CLI automatically detects config paths for these popular AI clients:
 
 **Don't see your client?** Use the `--path` option to specify custom configuration paths.
 
+### Template Behavior
+
+**Important**: The `toolentry` template automatically adapts based on usage:
+- **With client**: `toolentry autoinstall claude-desktop --template toolentry` → includes `CLIENT` environment variable
+- **Without client**: `toolentry autoinstall --template toolentry --path ./config.json` → clean config without client-specific variables
+
+Other templates (filesystem, git, sqlite, brave, postgres) work the same regardless of whether a client is specified.
+
 ## Global Options
 
 - `-v, --verbose` - Enable verbose logging
@@ -174,6 +191,9 @@ Toolentry CLI automatically detects config paths for these popular AI clients:
 # Using templates (recommended for humans)
 toolentry autoinstall claude-desktop --template toolentry
 toolentry autoinstall cline --template filesystem
+
+# Using custom paths (no client needed)
+toolentry autoinstall --template toolentry --path ~/.config/my-app/config.json
 
 # Using base64 JSON (recommended for automation)
 toolentry autoinstall claude-desktop --json-base64 eyJ0b29sZmxvdyI6ey...
