@@ -1,7 +1,7 @@
 {
   "name": "@grebyn/toolentry-cli",
   "type": "module",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "An open-source CLI for MCP installation",
   "author": "Grebyn",
   "license": "MIT",
