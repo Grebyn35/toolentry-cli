@@ -3,7 +3,6 @@ import { name, version } from '../package.json'
 import { setVerbose, setDebug } from './utils/logger.js'
 import { createReadCommand } from './commands/read.js'
 import { createWriteCommand } from './commands/write.js'
-import { createExecCommand } from './commands/exec.js'
 import { createTestCommand } from './commands/test.js'
 import { createAutoinstallCommand } from './commands/autoinstall.js'
 
@@ -36,7 +35,6 @@ program.allowUnknownOption(false)
 // Add commands
 program.addCommand(createReadCommand())
 program.addCommand(createWriteCommand())
-program.addCommand(createExecCommand())
 program.addCommand(createTestCommand())
 program.addCommand(createAutoinstallCommand())
 
