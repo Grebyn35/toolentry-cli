@@ -17,12 +17,4 @@ export const SUPPORTED_CLIENTS: SupportedClient[] = [
   'gemini-cli'
 ]
 
-export const TOOLENTRY_MCP_CONFIG = {
-  command: 'npx',
-  args: ['@toolentry.io/toolentry-mcp-server'],
-  env: {
-    CLIENT: 'AI-CLIENT'
-  }
-}
-
 export const TOOLENTRY_SERVER_NAME = 'toolentry'
