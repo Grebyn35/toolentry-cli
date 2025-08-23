@@ -1,6 +1,6 @@
 # Toolentry CLI - MCP Server Configuration Manager
 
-A powerful CLI for installing and managing Model Context Protocol (MCP) server configurations across 14+ AI clients.
+A powerful CLI for installing and managing Model Context Protocol (MCP) server configurations across 17+ AI clients.
 
 ## Features
 
@@ -18,7 +18,7 @@ npm install -g @toolentry.io/cli
 
 Or use with npx (no install needed):
 ```bash
-npx @toolentry.io/cli@latest --version
+npx @toolentry.io/cli@latest@latest --version
 ```
 
 ## Quick Start
@@ -29,12 +29,12 @@ npx @toolentry.io/cli@latest --version
 echo '{"your-server":{"command":"npx","args":["your-mcp-server"]}}' | base64
 
 # Install using the generated base64
-npx @toolentry.io/cli@latest autoinstall claude-desktop --json-base64 <your-base64-here>
+npx @toolentry.io/cli@latest@latest autoinstall claude-desktop --json-base64 <your-base64-here>
 ```
 
 **2. Check what's configured:**
 ```bash
-npx @toolentry.io/cli read claude-desktop
+npx @toolentry.io/cli@latest read claude-desktop
 ```
 
 **3. Restart your AI client to activate the server.**
@@ -47,8 +47,8 @@ Smart installation that merges new servers into existing configs without overwri
 
 **Using Base64 JSON (Primary Method):**
 ```bash
-npx @toolentry.io/cli autoinstall <client> --json-base64 <encoded>         # Use with known client
-npx @toolentry.io/cli autoinstall --json-base64 <encoded> --path <file>    # Use with custom path
+npx @toolentry.io/cli@latest autoinstall <client> --json-base64 <encoded>         # Use with known client
+npx @toolentry.io/cli@latest autoinstall --json-base64 <encoded> --path <file>    # Use with custom path
 ```
 
 **Easy CLI Command Generation:**
@@ -56,18 +56,18 @@ Visit [toolentry.io/json-to-cli](https://www.toolentry.io/json-to-cli) to conver
 
 **Using Templates (Alternative Method):**
 ```bash
-npx @toolentry.io/cli autoinstall <client> --template <name>     # Use built-in template
-npx @toolentry.io/cli autoinstall --template <name> --path <file> # Use template with custom path
-npx @toolentry.io/cli autoinstall --list-templates               # Show available templates
+npx @toolentry.io/cli@latest autoinstall <client> --template <name>     # Use built-in template
+npx @toolentry.io/cli@latest autoinstall --template <name> --path <file> # Use template with custom path
+npx @toolentry.io/cli@latest autoinstall --list-templates               # Show available templates
 ```
 
 **Base64 JSON Examples:**
 ```bash
 # Install with known client
-npx @toolentry.io/cli autoinstall claude-desktop --json-base64 eyJzZXJ2ZXIiOnsiY29tbWFuZCI6Im5weCIsImFyZ3MiOlsieW91ci1tY3Atc2VydmVyIl19fQ==
+npx @toolentry.io/cli@latest autoinstall claude-desktop --json-base64 eyJzZXJ2ZXIiOnsiY29tbWFuZCI6Im5weCIsImFyZ3MiOlsieW91ci1tY3Atc2VydmVyIl19fQ==
 
 # Install to custom path with base64 JSON
-npx @toolentry.io/cli autoinstall --json-base64 eyJzZXJ2ZXIiOnsiY29tbWFuZCI6Im5weCIsImFyZ3MiOlsieW91ci1zZXJ2ZXIiXX19 --path ./config.json
+npx @toolentry.io/cli@latest autoinstall --json-base64 eyJzZXJ2ZXIiOnsiY29tbWFuZCI6Im5weCIsImFyZ3MiOlsieW91ci1zZXJ2ZXIiXX19 --path ./config.json
 
 # How to generate base64 in JavaScript:
 # const config = {"server-name": {"command": "npx", "args": ["your-mcp-server"]}}
@@ -85,16 +85,16 @@ npx @toolentry.io/cli autoinstall --json-base64 eyJzZXJ2ZXIiOnsiY29tbWFuZCI6Im5w
 **Template Examples:**
 ```bash
 # Install filesystem server
-npx @toolentry.io/cli autoinstall cline --template filesystem
+npx @toolentry.io/cli@latest autoinstall cline --template filesystem
 
 # Install git server
-npx @toolentry.io/cli autoinstall claude-desktop --template git
+npx @toolentry.io/cli@latest autoinstall claude-desktop --template git
 
 # Install to custom path (no client needed)
-npx @toolentry.io/cli autoinstall --template filesystem --path ~/.config/my-client/config.json
+npx @toolentry.io/cli@latest autoinstall --template filesystem --path ~/.config/my-client/config.json
 
 # List all available templates
-npx @toolentry.io/cli autoinstall --list-templates
+npx @toolentry.io/cli@latest autoinstall --list-templates
 ```
 
 **Options:**
@@ -106,20 +106,20 @@ npx @toolentry.io/cli autoinstall --list-templates
 Read the current configuration from an AI client or custom path:
 
 ```bash
-npx @toolentry.io/cli read <client>          # Use known client (auto-detect path)
-npx @toolentry.io/cli read --path <file>     # Use custom path
+npx @toolentry.io/cli@latest read <client>          # Use known client (auto-detect path)
+npx @toolentry.io/cli@latest read --path <file>     # Use custom path
 ```
 
 **Examples:**
 ```bash
 # Read from known clients (auto-detect config path)
-npx @toolentry.io/cli read claude-desktop
-npx @toolentry.io/cli read cline
-npx @toolentry.io/cli read windsurf
+npx @toolentry.io/cli@latest read claude-desktop
+npx @toolentry.io/cli@latest read cline
+npx @toolentry.io/cli@latest read windsurf
 
 # Read from custom paths
-npx @toolentry.io/cli read --path /custom/path/config.json
-npx @toolentry.io/cli read --path ~/.config/my-ai/settings.json
+npx @toolentry.io/cli@latest read --path /custom/path/config.json
+npx @toolentry.io/cli@latest read --path ~/.config/my-ai/settings.json
 ```
 
 ### Write Configuration
@@ -127,8 +127,8 @@ npx @toolentry.io/cli read --path ~/.config/my-ai/settings.json
 **Warning:** Overwrites entire config file. Use `autoinstall` instead to preserve existing servers.
 
 ```bash
-npx @toolentry.io/cli write <client> '<json>'        # Overwrite known client config
-npx @toolentry.io/cli write '<json>' --path <file>   # Overwrite custom path
+npx @toolentry.io/cli@latest write <client> '<json>'        # Overwrite known client config
+npx @toolentry.io/cli@latest write '<json>' --path <file>   # Overwrite custom path
 ```
 
 ### Test MCP Server Configuration
@@ -136,16 +136,16 @@ npx @toolentry.io/cli write '<json>' --path <file>   # Overwrite custom path
 Test if an MCP server configuration works before installing:
 
 ```bash
-npx @toolentry.io/cli test '<config-json>' [--type startup|protocol|full] [--timeout ms]
+npx @toolentry.io/cli@latest test '<config-json>' [--type startup|protocol|full] [--timeout ms]
 ```
 
 **Examples:**
 ```bash
 # Basic test
-npx @toolentry.io/cli test '{"command": "npx", "args": ["your-mcp-server"]}'
+npx @toolentry.io/cli@latest test '{"command": "npx", "args": ["your-mcp-server"]}'
 
 # Full protocol test
-npx @toolentry.io/cli test '{"command": "python", "args": ["server.py"]}' --type protocol
+npx @toolentry.io/cli@latest test '{"command": "python", "args": ["server.py"]}' --type protocol
 ```
 
 ## Supported AI Clients & Platforms
@@ -183,28 +183,28 @@ Toolentry CLI automatically detects config paths for these popular AI clients:
 **Install servers (preserves existing config):**
 ```bash
 # Using base64 JSON (recommended for automation and scripting)
-npx @toolentry.io/cli autoinstall claude-desktop --json-base64 eyJzZXJ2ZXIiOnsiY29tbWFuZCI6Im5weCIsImFyZ3MiOlsieW91ci1zZXJ2ZXIiXX19
+npx @toolentry.io/cli@latest autoinstall claude-desktop --json-base64 eyJzZXJ2ZXIiOnsiY29tbWFuZCI6Im5weCIsImFyZ3MiOlsieW91ci1zZXJ2ZXIiXX19
 
 # Using templates (convenient for common servers)
-npx @toolentry.io/cli autoinstall cline --template filesystem
-npx @toolentry.io/cli autoinstall windsurf --template git
+npx @toolentry.io/cli@latest autoinstall cline --template filesystem
+npx @toolentry.io/cli@latest autoinstall windsurf --template git
 
 # Using custom paths (no client needed)
-npx @toolentry.io/cli autoinstall --json-base64 <base64> --path ~/.config/my-app/config.json
+npx @toolentry.io/cli@latest autoinstall --json-base64 <base64> --path ~/.config/my-app/config.json
 ```
 
 **Check configurations:**
 ```bash
-npx @toolentry.io/cli read claude-desktop
-npx @toolentry.io/cli read --path ~/.config/my-client/config.json
+npx @toolentry.io/cli@latest read claude-desktop
+npx @toolentry.io/cli@latest read --path ~/.config/my-client/config.json
 ```
 
 ## Troubleshooting
 
 **MCP server not appearing?**
-1. Test first: `npx @toolentry.io/cli test '{"command": "npx", "args": ["your-server"]}'`
+1. Test first: `npx @toolentry.io/cli@latest test '{"command": "npx", "args": ["your-server"]}'`
 2. Restart your AI client completely
-3. Check config: `npx @toolentry.io/cli read claude-desktop`
+3. Check config: `npx @toolentry.io/cli@latest read claude-desktop`
 
 **Common fixes:**
 - Use `--path` for unsupported clients
