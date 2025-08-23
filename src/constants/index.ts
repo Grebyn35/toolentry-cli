@@ -19,7 +19,7 @@ export const SUPPORTED_CLIENTS: SupportedClient[] = [
 
 export const TOOLENTRY_MCP_CONFIG = {
   command: 'npx',
-  args: ['@grebyn/toolentry-mcp-server'],
+  args: ['@toolentry.io/toolentry-mcp-server'],
   env: {
     CLIENT: 'AI-CLIENT'
   }

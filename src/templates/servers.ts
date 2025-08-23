@@ -14,7 +14,7 @@ export const SERVER_TEMPLATES: Record<string, ServerTemplate> = {
       const config: any = {
         toolentry: {
           command: 'npx',
-          args: ['@grebyn/toolentry-mcp-server@latest']
+          args: ['@toolentry.io/toolentry-mcp-server@latest']
         }
       }
       

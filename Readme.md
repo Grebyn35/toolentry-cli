@@ -13,12 +13,12 @@ A powerful CLI for installing and managing Model Context Protocol (MCP) server c
 ## Installation
 
 ```bash
-npm install -g @grebyn/toolentry-cli
+npm install -g @toolentry.io/cli
 ```
 
 Or use with npx (no install needed):
 ```bash
-npx @grebyn/toolentry-cli@latest --version
+npx @toolentry.io/cli@latest --version
 ```
 
 ## Quick Start
@@ -29,7 +29,7 @@ npx @grebyn/toolentry-cli@latest --version
 echo '{"your-server":{"command":"npx","args":["your-mcp-server"]}}' | base64
 
 # Install using the generated base64
-npx @grebyn/toolentry-cli@latest autoinstall claude-desktop --json-base64 <your-base64-here>
+npx @toolentry.io/cli@latest autoinstall claude-desktop --json-base64 <your-base64-here>
 ```
 
 **2. Check what's configured:**
