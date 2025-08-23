@@ -13,12 +13,12 @@ A powerful CLI for installing and managing Model Context Protocol (MCP) server c
 ## Installation
 
 ```bash
-npm install -g @npx @toolentry.io/cli.io/cli
+npm install -g @toolentry.io/cli
 ```
 
 Or use with npx (no install needed):
 ```bash
-npx @npx @toolentry.io/cli.io/cli@latest --version
+npx @toolentry.io/cli@latest --version
 ```
 
 ## Quick Start
@@ -29,7 +29,7 @@ npx @npx @toolentry.io/cli.io/cli@latest --version
 echo '{"your-server":{"command":"npx","args":["your-mcp-server"]}}' | base64
 
 # Install using the generated base64
-npx @npx @toolentry.io/cli.io/cli@latest autoinstall claude-desktop --json-base64 <your-base64-here>
+npx @toolentry.io/cli@latest autoinstall claude-desktop --json-base64 <your-base64-here>
 ```
 
 **2. Check what's configured:**
@@ -52,7 +52,7 @@ npx @toolentry.io/cli autoinstall --json-base64 <encoded> --path <file>    # Use
 ```
 
 **Easy CLI Command Generation:**
-Visit [npx @toolentry.io/cli.io/json-to-cli](https://www.npx @toolentry.io/cli.io/json-to-cli) to convert your MCP server JSON configuration into a ready-to-use CLI command with base64 encoding automatically handled.
+Visit [toolentry.io/json-to-cli](https://www.toolentry.io/json-to-cli) to convert your MCP server JSON configuration into a ready-to-use CLI command with base64 encoding automatically handled.
 
 **Using Templates (Alternative Method):**
 ```bash
@@ -77,7 +77,7 @@ npx @toolentry.io/cli autoinstall --json-base64 eyJzZXJ2ZXIiOnsiY29tbWFuZCI6Im5w
 # echo '{"server":{"command":"python","args":["server.py"]}}' | base64
 
 # Use the online converter for easy CLI command generation:
-# Visit https://www.npx @toolentry.io/cli.io/json-to-cli
+# Visit https://www.toolentry.io/json-to-cli
 # Paste your MCP server JSON config
 # Get a ready-to-use CLI command with base64 encoding
 ```
