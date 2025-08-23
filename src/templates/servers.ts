@@ -26,9 +26,9 @@ export const SERVER_TEMPLATES: Record<string, ServerTemplate> = {
         config.toolentry.env.CLIENT = 'unknown'
       }
       
-      // Set PATH env variable if custom path is provided
+      // Set CONFIG_PATH env variable if custom path is provided
       if (customPath) {
-        config.toolentry.env.PATH = customPath
+        config.toolentry.env.CONFIG_PATH = customPath
       }
       
       return config
