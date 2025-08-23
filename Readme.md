@@ -141,12 +141,20 @@ npx @toolentry.io/cli@latest test '<config-json>' [--type startup|protocol|full]
 
 **Examples:**
 ```bash
-# Basic test
+# Basic test (Unix/Linux/Mac)
 npx @toolentry.io/cli@latest test '{"command": "npx", "args": ["your-mcp-server"]}'
 
-# Full protocol test
+# Basic test (Windows Command Prompt)
+npx @toolentry.io/cli@latest test "{\"command\": \"npx\", \"args\": [\"your-mcp-server\"]}"
+
+# Full protocol test (Unix/Linux/Mac)
 npx @toolentry.io/cli@latest test '{"command": "python", "args": ["server.py"]}' --type protocol
+
+# Full protocol test (Windows Command Prompt)
+npx @toolentry.io/cli@latest test "{\"command\": \"python\", \"args\": [\"server.py\"]}" --type protocol
 ```
+
+**Note for Windows users:** In Windows Command Prompt (cmd.exe), use double quotes with escaped inner quotes as shown above. PowerShell users can use the Unix/Linux/Mac syntax.
 
 ## Supported AI Clients & Platforms
 

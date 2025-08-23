@@ -25,11 +25,15 @@ export function createTestCommand(): Command {
   const command = new Command('test')
   command
     .description('Test MCP server configuration')
-    .argument('<config>', 'MCP server configuration JSON')
+    .argument('<config...>', 'MCP server configuration JSON (multiple arguments will be joined)')
     .option('-t, --type <type>', 'Test type: startup, protocol, or full', 'startup')
     .option('--timeout <ms>', 'Timeout in milliseconds', '10000')
-    .action(async (configJson: string, options) => {
+    .action(async (configArgs: string[], options) => {
       try {
+        // Join all arguments back into a single string to handle cases where
+        // the JSON was split by shell argument parsing
+        const configJson = Array.isArray(configArgs) ? configArgs.join(' ') : configArgs
+        
         // Parse MCP server config
         let config: MCPServerConfig
         try {
