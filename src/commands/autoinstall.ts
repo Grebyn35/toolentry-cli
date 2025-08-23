@@ -132,7 +132,7 @@ export function createAutoinstallCommand(): Command {
           }
           
           const targetClient = client as SupportedClient | undefined
-          newServers = template.generateConfig(targetClient)
+          newServers = template.generateConfig(targetClient, options.path)
           logger.verbose(`Using template '${options.template}': ${template.description}`)
           
         } else if (options.jsonBase64) {

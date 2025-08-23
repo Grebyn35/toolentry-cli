@@ -3,24 +3,32 @@ import { SupportedClient } from '../types/index.js'
 export interface ServerTemplate {
   name: string
   description: string
-  generateConfig: (client?: SupportedClient) => Record<string, any>
+  generateConfig: (client?: SupportedClient, customPath?: string) => Record<string, any>
 }
 
 export const SERVER_TEMPLATES: Record<string, ServerTemplate> = {
   toolentry: {
     name: 'Toolentry MCP Server',
     description: 'Official Toolentry MCP server for AI agent tool management',
-    generateConfig: (client?: SupportedClient) => {
+    generateConfig: (client?: SupportedClient, customPath?: string) => {
       const config: any = {
         toolentry: {
           command: 'npx',
-          args: ['@toolentry.io/toolentry-mcp-server@latest']
+          args: ['@toolentry.io/toolentry-mcp-server@latest'],
+          env: {}
         }
       }
       
-      // Only add CLIENT env if client is provided
+      // Set CLIENT env variable
       if (client) {
-        config.toolentry.env = { CLIENT: client }
+        config.toolentry.env.CLIENT = client
+      } else {
+        config.toolentry.env.CLIENT = 'unknown'
+      }
+      
+      // Set PATH env variable if custom path is provided
+      if (customPath) {
+        config.toolentry.env.PATH = customPath
       }
       
       return config
@@ -29,7 +37,7 @@ export const SERVER_TEMPLATES: Record<string, ServerTemplate> = {
   filesystem: {
     name: 'Filesystem MCP Server',
     description: 'Official MCP filesystem server for file operations',
-    generateConfig: (client?: SupportedClient) => ({
+    generateConfig: (client?: SupportedClient, customPath?: string) => ({
       filesystem: {
         command: 'npx',
         args: ['@modelcontextprotocol/server-filesystem', process.cwd()],
@@ -40,7 +48,7 @@ export const SERVER_TEMPLATES: Record<string, ServerTemplate> = {
   git: {
     name: 'Git MCP Server',
     description: 'Official MCP git server for repository operations',
-    generateConfig: (client?: SupportedClient) => ({
+    generateConfig: (client?: SupportedClient, customPath?: string) => ({
       git: {
         command: 'npx',
         args: ['@modelcontextprotocol/server-git', process.cwd()],
@@ -51,7 +59,7 @@ export const SERVER_TEMPLATES: Record<string, ServerTemplate> = {
   sqlite: {
     name: 'SQLite MCP Server',
     description: 'Official MCP SQLite server for database operations',
-    generateConfig: (client?: SupportedClient) => ({
+    generateConfig: (client?: SupportedClient, customPath?: string) => ({
       sqlite: {
         command: 'npx',
         args: ['@modelcontextprotocol/server-sqlite'],
@@ -62,7 +70,7 @@ export const SERVER_TEMPLATES: Record<string, ServerTemplate> = {
   brave: {
     name: 'Brave Search MCP Server',
     description: 'Official MCP server for Brave Search API',
-    generateConfig: (client?: SupportedClient) => ({
+    generateConfig: (client?: SupportedClient, customPath?: string) => ({
       'brave-search': {
         command: 'npx',
         args: ['@modelcontextprotocol/server-brave-search'],
@@ -75,7 +83,7 @@ export const SERVER_TEMPLATES: Record<string, ServerTemplate> = {
   postgres: {
     name: 'PostgreSQL MCP Server',
     description: 'Official MCP server for PostgreSQL database operations',
-    generateConfig: (client?: SupportedClient) => ({
+    generateConfig: (client?: SupportedClient, customPath?: string) => ({
       postgres: {
         command: 'npx',
         args: ['@modelcontextprotocol/server-postgres'],
